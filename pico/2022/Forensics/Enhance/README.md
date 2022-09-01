@@ -1,39 +1,45 @@
-# basic-mod1
+# Enhance!
 ## Description
 - **Tags**:
     - picoCTF 2022
-    - Cryptography
-- **Author**: Will Hong
+    - Forensics
+- **Author**: LT 'Syreal' Jones
 
 
-We found this weird message being passed around on the servers, we think we have a working decryption scheme.
-
-Download the message [here](https://artifacts.picoctf.net/c/395/message.txt).
-
-Take each number mod 37 and map it to the following character set: 0-25 is the alphabet (uppercase), 26-35 are the decimal digits, and 36 is an underscore.
-
-Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_message}`)
+Download this image file and find the flag.
+* [Download image file](https://artifacts.picoctf.net/c/137/drawing.flag.svg)
 
 
 ## Exploration
 
-Problem statement is pretty straight forward, giving a transformation function from input to output.
-
-Taking a look at the input format we see that the file containes space seperated numbers like:
-```bash
-$ cat message.txt
-91 322 57 124 40 406 272 147 239 285 353 272 77 110 296 262 299 323 255 337 150 102
+The file provided appears to be an SVG file, which is essentially XML.
+```
+$ file drawing.flag.svg
+drawing.flag.svg: SVG Scalable Vector Graphics image
 ```
 
-To form the decrypted message we then need to:
-- Read content in from file
-- Split on space seperator
-- Convert to actual numeric values
-- Take the result mod 37
-- Use that value as an index into a lookup table
-- Wrap the message in the flag format
+SVG files are essentially XML files so we can take a look through the text to see if anything stands out.
 
 ```
-$ ./message.py
+$ less drawing.flag.svg
+```
+
+And it seems like the flag is broken up between different `tspan`s.
+```
+$ grep tspan drawing.flag.svg
+       id="text3723"><tspan
+         id="tspan3748">p </tspan><tspan
+         id="tspan3754">i </tspan><tspan
+         id="tspan3756">c </tspan><tspan
+         id="tspan3758">o </tspan><tspan
+         id="tspan3760">C </tspan><tspan
+         id="tspan3762">T </tspan><tspan
+         id="tspan3764">F { R E D A C T E D </tspan><tspan
+         id="tspan3752">R E D A C T E D }</tspan></text>
+```
+
+And if we want to go a bit overboard we can script extracting the text and removing unnecessary whitespace.
+```
+$ ./drawing.flag.py
 picoCTF{REDACTED}
 ```
