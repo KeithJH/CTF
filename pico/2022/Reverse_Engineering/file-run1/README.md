@@ -16,7 +16,7 @@ We can simply pull down the executable and mark it with execute permissions and 
 ```
 $ wget https://artifacts.picoctf.net/c/309/run
 $ chmod +x run
-$./ run
+$./run
 picoCTF{REDACTED}
 ```
 
